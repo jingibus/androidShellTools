@@ -1,0 +1,20 @@
+#!/usr/bin/env gawk -f
+
+/<[a-zA-Z.]*/ {
+    tagName = gensub(/^.*<([a-zA-Z.]*\.)?([a-zA-Z]*).*/, "\\2", $0);
+}
+
+/android:id=\"@\+id\// {
+    rawId = gensub(/^.*:id=\"@\+id\/([a-zA-Z0-9_]*)\".*/, "\\1", "", $0);
+    fieldName = gensub(/^.*_/, "", "", rawId);
+    if (tagName == "include") {
+        tagName = "View";
+    }
+    print tagName " " fieldName " = (" tagName ")v.findViewById(R.id." rawId ");"
+}
+
+/layout=\"@layout\/[a-z_]+"/ {
+    layoutFile = gensub(/^.*layout=\"@layout\/([a-zA-Z0-9_]*)\".*/, "\\1", "", $0) ".xml";
+    # assumes that the layout file is in this same folder. because seriously.
+    system("cat " layoutFile " | filter_android_xml_ids");
+}

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+TMP=$(mktemp output.XXXXXXX)
+tee "$TMP"
+
+cat "$TMP" | filter_android_xml_ids | pbcopy
+
+rm $TMP
