@@ -1,4 +1,6 @@
 #!/bin/sh
+# Copies a line of code for each layout id from stdin into your pasteboard.
+# See filter_android_xml_ids for more info on how this works.
 
 TMP=$(mktemp output.XXXXXXX)
 tee "$TMP"

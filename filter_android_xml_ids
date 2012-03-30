@@ -1,4 +1,30 @@
 #!/usr/bin/env gawk -f
+#
+# Converts all or a portion of a layout file into lines of java
+# code that pull those views out with the appropriate class. E.g.
+# if you pipe in this section of layout xml:
+#
+#     android:layout_height="fill_parent">
+# <RelativeLayout 
+#     android:layout_width="fill_parent"
+#     android:layout_height="fill_parent" 
+#     >
+#     <include 
+#         layout="@layout/title_view"
+#         android:id="@+id/titleArea"
+#         android:layout_alignParentTop="true"
+#         />
+#     <LinearLayout
+#         android:id="@+id/dosDontsContainer"
+#         android:orientation="vertical"
+# 
+# ...and there is a title_view.xml in your working directory with R.id.title_view_titleTextView,
+# you'll get the following from this script:
+#
+# TextView titleTextView = (TextView)v.findViewById(R.id.title_view_titleTextView);
+# View titleArea = (View)v.findViewById(R.id.titleArea);
+# LinearLayout dosDontsContainer = (LinearLayout)v.findViewById(R.id.dosDontsContainer);
+# 
 
 /<[a-zA-Z.]*/ {
     tagName = gensub(/^.*<([a-zA-Z.]*\.)?([a-zA-Z]*).*/, "\\2", $0);
